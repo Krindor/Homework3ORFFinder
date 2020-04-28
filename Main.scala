@@ -21,7 +21,7 @@ object Main {
       "GGCCGTATGGTTGTTGATTTTACCCATCACTAGGTTTCCGTGAAGGCGGAAGCATAAACGGAAAAAGCCTTTCTCTTACCAG" +
       "AAAGGCTTTTTCTTTGTCGTCTGATAAAAATTTTCAT"
     val ORFArray: HashMap[String, String] = run(sequence)
-    print(ORFArray.get("ORF0"))
+    print(ORFArray.get("ORF1"))
   }
 
   def run(sequence:String): HashMap[String, String] = {
@@ -31,6 +31,7 @@ object Main {
     var sequenceFound: Boolean = false
     while (sequenceNr < sequence.length - 2) {
       var currentCodon: String = (sequence.charAt(sequenceNr).toString + sequence.charAt(sequenceNr + 1).toString + sequence.charAt(sequenceNr + 2)).toString
+      
       if (currentCodon.equals("ATG")) {
         ORF += 'A'
         ORF += 'T'
@@ -44,16 +45,20 @@ object Main {
         ORF += currentCodon.charAt(1)
         ORF += currentCodon.charAt(2)
         
-        ORFArray.put("ORF" + ORFArray.size, ORF.toString())
+        if (ORF.length() > 50) {
+          ORFArray.put("ORF" + ORFArray.size, ORF.toString())
+        }
         ORF = new StringBuilder
         sequenceNr += 1
         sequenceFound = false
       }
       else {
         if (sequenceFound) {
-          ORF += sequence.charAt(sequenceNr)
-        }
-        sequenceNr += 1
+          ORF += currentCodon.charAt(0)
+          ORF += currentCodon.charAt(1)
+          ORF += currentCodon.charAt(2)
+          sequenceNr+=3
+        }else sequenceNr += 1
       }
     }
     return ORFArray
